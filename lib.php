@@ -43,12 +43,19 @@ function atto_pumukitpr_strings_for_js() {
  * @return array of additional params to pass to javascript init function for this module.
  */
 function atto_pumukitpr_params_for_js($elementid, $options, $fpoptions) {
+    global $USER;
+    
     $params = array();
 
     $params['pumukitprurl'] = get_config('atto_pumukitpr', 'pumukitprurl');
     $params['dialogtitle'] = get_config('atto_pumukitpr', 'dialogtitle');
+    $params['username'] = $USER->username;
 
+    $date = date('d/m/Y');
+    $password = get_config('atto_pumukitpr', 'password');
+    $domain = parse_url($params['pumukitprurl'], PHP_URL_HOST);
+    $hash = md5($USER->username.$password.$date.$domain);
+    $params['hash'] = $hash;
 
     return $params;
-
 }

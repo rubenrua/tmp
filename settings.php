@@ -31,8 +31,11 @@ $settings = new admin_settingpage('atto_pumukitpr_settings', new lang_string('se
 if ($ADMIN->fulltree) {
     // An option setting
     $settings->add(new admin_setting_configtext('atto_pumukitpr/pumukitprurl',
-        get_string('pumukitprurl', 'atto_pumukitpr'), get_string('pumukitprurldesc', 'atto_pumukitpr'), 'https://snf-683722.vm.okeanos.grnet.gr/pumoodle/searchmultimediaobjects', PARAM_URL));
+        get_string('pumukitprurl', 'atto_pumukitpr'), get_string('pumukitprurldesc', 'atto_pumukitpr'), 'https://naked-pr-up2u.teltek.es', PARAM_URL));
 
     $settings->add(new admin_setting_configtext('atto_pumukitpr/dialogtitle',
         get_string('dialogtitle', 'atto_pumukitpr'), get_string('dialogtitledesc', 'atto_pumukitpr'), get_string('dialogtitledefval', 'atto_pumukitpr'), PARAM_TEXT));
+
+    $settings->add(new admin_setting_configtext('atto_pumukitpr/password',
+        get_string('password', 'atto_pumukitpr'), get_string('passworddesc', 'atto_pumukitpr'), get_string('passworddefval', 'atto_pumukitpr'), PARAM_TEXT));
 }

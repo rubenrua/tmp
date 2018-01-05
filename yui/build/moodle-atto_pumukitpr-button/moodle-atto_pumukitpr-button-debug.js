@@ -40,19 +40,59 @@ var FLAVORCONTROL = 'pumukitpr_flavor';
 var LOGNAME = 'atto_pumukitpr';
 
 var CSS = {
-        INPUTSUBMIT: 'atto_media_urlentrysubmit',
-        INPUTCANCEL: 'atto_media_urlentrycancel',
-        FLAVORCONTROL: 'flavorcontrol'
+    INPUTSUBMIT: 'atto_media_urlentrysubmit',
+    INPUTCANCEL: 'atto_media_urlentrycancel',
+    FLAVORCONTROL: 'flavorcontrol'
     },
     SELECTORS = {
         FLAVORCONTROL: '.flavorcontrol'
     };
 
 var TEMPLATE = '' +
-    '<h2> __asdf  asf asdf fdsaf asdf__  </h2>' +
-    '<p> asdf  asf asdf fdsaf asdf  </p>' +
-    '<iframe src="{{PUMUKITURL}}" frameborder="0" allowfullscreen style="width:100%;height:80vh">' +
-    '</iframe>' +
+    '<ul class="root nav nav-tabs" role="tablist">' +
+        '<li class="nav-item">' +
+            '<a class="nav-link active" href="#{{elementid}}_upload" role="tab" data-toggle="tab">' +
+                'Upload' +
+            '</a>' +
+        '</li>' +
+        '<li class="nav-item">' +
+            '<a class="nav-link" href="#{{elementid}}_personal_recorder" role="tab" data-toggle="tab">' +
+                'Personal Recorder' +
+            '</a>' +
+        '</li>' +
+        '<li class="nav-item">' +
+            '<a class="nav-link" href="#{{elementid}}_manager" role="tab" data-toggle="tab">' +
+                'Manager' +
+            '</a>' +
+        '</li>' +
+    '</ul>' +
+    '<div class="root tab-content">' +
+        '<div class="tab-pane active" id="{{elementid}}_upload">' +
+
+            '<iframe src="{{PUMUKITURL}}/openedx/sso/upload?hash={{HASH}}&username={{USERNAME}}&lang=en" ' +
+                    'frameborder="0" allowfullscreen style="width:100%;height:80vh">' +
+           '</iframe>' +
+
+        '</div>' +
+        '<div data-medium-type="personal_recorder" class="tab-pane" id="{{elementid}}_personal_recorder">' +
+
+            '<iframe src="{{PUMUKITURL}}/openedx/sso/personal_recorder?hash={{HASH}}&username={{USERNAME}}&lang=en" ' +
+                    'frameborder="0" allowfullscreen style="width:100%;height:80vh">' +
+           '</iframe>' +
+
+
+        '</div>' +
+        '<div class="tab-pane" id="{{elementid}}_manager">' +
+
+            '<iframe src="{{PUMUKITURL}}/openedx/sso/manager?hash={{HASH}}&username={{USERNAME}}&lang=en" ' +
+                    'frameborder="0" allowfullscreen style="width:100%;height:80vh">' +
+           '</iframe>' +
+
+        '</div>' +
+    '</div>' +
+
+
+
     '<form class="atto_form">' +
         '<input class="{{CSS.FLAVORCONTROL}}" id="{{elementid}}_{{FLAVORCONTROL}}" ' +
             'name="{{elementid}}_{{FLAVORCONTROL}}" value="{{defaultflavor}}" ' +
@@ -113,13 +153,15 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
 
         var dialogue = this.getDialogue({
             headerContent: this.get('dialogtitle'),
-            width: width + 'px',
+            //width: width + 'px',
+            widht: '70%', //rr width
             focusAfterHide: clickedicon
         });
         //dialog doesn't detect changes in width without this
         //if you reuse the dialog, this seems necessary
         if(dialogue.width !== width + 'px'){
             dialogue.set('width',width+'px');
+            dialogue.set('max-width','550px');
         }
 
         //append buttons to iframe
@@ -150,6 +192,8 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
                 CSS: CSS,
                 FLAVORCONTROL: FLAVORCONTROL,
                 PUMUKITURL: this.get('pumukitprurl'),
+                HASH: this.get('hash'),
+                USERNAME: this.get('username'),
                 component: COMPONENTNAME,
                 defaultflavor: this.get('defaultflavor'),
                 clickedicon: clickedicon
@@ -211,6 +255,12 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
 }, {
     ATTRS: {
         pumukitprurl: {
+            value: ''
+        },
+        hash: {
+            value: ''
+        },
+        username: {
             value: ''
         },
         dialogtitle: {
