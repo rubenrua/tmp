@@ -99,7 +99,6 @@ var TEMPLATE = '' +
 
 Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto.EditorPlugin, [], {
 
-
     _receiveMessageBind: null,
 
     /**
@@ -121,6 +120,20 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
             callback: this._displayDialogue,
             callbackArgs: 'iconone'
         });
+
+
+        // Force SSO
+        var id = "pumukitpr_iframe_sso";
+        if (!document.getElementById(id)) {
+            var iframe = document.createElement('iframe');
+            iframe.id = id;
+            iframe.style.display = "none";
+            iframe.src = this.get('pumukitprurl') + "/openedx/sso/manager?hash=" +
+                this.get('hash') + "&username=" +
+                this.get('username') + "&lang=en";
+            document.getElementsByTagName('body')[0].appendChild(iframe);
+        }
+
 
     },
 
