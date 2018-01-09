@@ -101,7 +101,6 @@ var TEMPLATE = '' +
 
 Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto.EditorPlugin, [], {
 
-
     _receiveMessageBind: null,
 
     /**
@@ -123,6 +122,20 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
             callback: this._displayDialogue,
             callbackArgs: 'iconone'
         });
+
+
+        // Force SSO
+        var id = "pumukitpr_iframe_sso";
+        if (!document.getElementById(id)) {
+            var iframe = document.createElement('iframe');
+            iframe.id = id;
+            iframe.style.display = "none";
+            iframe.src = this.get('pumukitprurl') + "/openedx/sso/manager?hash=" +
+                this.get('hash') + "&username=" +
+                this.get('username') + "&lang=en";
+            document.getElementsByTagName('body')[0].appendChild(iframe);
+        }
+
 
     },
 
@@ -147,7 +160,7 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
     _displayDialogue: function(e, clickedicon) {
         e.preventDefault();
         var width=900;
-
+        
         this._receiveMessageBind = this._receiveMessage.bind(this);
         window.addEventListener('message', this._receiveMessageBind);
 
@@ -201,6 +214,7 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
 
         this._form = content;
         //this._form.one('.' + CSS.INPUTSUBMIT).on('click', this._doInsert, this);
+
         return content;
     },
 
@@ -230,7 +244,7 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
 
 
     _receiveMessage : function(e){
-        if (e.data.type != 'atto_pumukitpr') {
+        if (!('mmId' in event.data)) {
             return;
         }
 
@@ -240,14 +254,18 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
         }).hide();
 
         // If no file is there to insert, don't do it.
-        if (!e.data.url){
+        if (!e.data.mmId){
             return;
         }
 
         window.removeEventListener('message', this._receiveMessageBind);
 
         this.editor.focus();
-        this.get('host').insertContentAtFocusPoint(e.data.url);
+
+        var url = this.get('pumukitprurl') + '/openedx/openedx/embed/?id=' + event.data.mmId;
+        var iframe = '<iframe src="' + url +
+            '" style="border:0px #FFFFFF none;" scrolling="no" frameborder="1" height="270" width="480" allowfullscreen></iframe>';
+        this.get('host').insertContentAtFocusPoint(iframe);
         this.markUpdated();
     }
 }, {
